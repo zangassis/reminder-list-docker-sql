@@ -1,37 +1,39 @@
-using Microsoft.EntityFrameworkCore;
-using ReminderList.Data;
+	using Microsoft.EntityFrameworkCore;
+	using ReminderList.Data;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://*:80");
+	var builder = WebApplication.CreateBuilder(args);
+	builder.WebHost.UseUrls("http://*:80");
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<TodoContext>(options =>
-    options.UseSqlServer(connectionString));
+	builder.Services.AddDbContext<TodoContext>(options =>
+		options.UseSqlServer(connectionString));
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+	// Add services to the container.
+	builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+	var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-	app.UseDeveloperExceptionPage();
-}
-else
-{
-	app.UseExceptionHandler("/Home/Error");
-}
+	if (app.Environment.IsDevelopment())
+	{
+		app.UseDeveloperExceptionPage();
+	}
+	else
+	{
+		app.UseExceptionHandler("/Home/Error");
+	}
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+	app.UseHttpsRedirection();
+	app.UseStaticFiles();
 
-app.UseRouting();
+	app.UseRouting();
 
-app.UseAuthorization();
+	app.UseAuthorization();
+	
+	DatabaseManagementService.MigrationInitialisation(app);
 
-app.MapControllerRoute(
-	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
+	app.MapControllerRoute(
+		name: "default",
+		pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+	app.Run();
