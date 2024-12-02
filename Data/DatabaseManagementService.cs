@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ReminderList.Data
 {
@@ -9,7 +11,11 @@ namespace ReminderList.Data
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<TodoContext>();
-                context.Database.Migrate();
+
+                if (!context.Database.GetService<IRelationalDatabaseCreator>().Exists())
+                {
+                    context.Database.Migrate();
+                }
             }
         }
     }
